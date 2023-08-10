@@ -24,7 +24,6 @@ pandas
 Pillow
 python-dateutil
 pytz
-pywin32
 requests
 s3transfer
 six
