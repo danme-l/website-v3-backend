@@ -32,8 +32,6 @@ soupsieve
 SQLAlchemy
 typing_extensions
 tzdata
-urllib3
-vboxapi
 wasabi
 webencodings
 Werkzeug
