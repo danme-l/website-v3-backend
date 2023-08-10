@@ -12,6 +12,7 @@ def create_app():
     market_controller = MarketController()
     
     @app.route('/markets')
+    @cross_origin()
     def market_data():
         # get the custom tickers from the request URL parameters
         tickers = request.args.getlist('tickers')
@@ -28,11 +29,13 @@ def create_app():
 
             
     @app.route('/markets/<ticker>')
+    @cross_origin()
     def single_ticker_data(ticker):
         ticker_data = market_controller.get_single_ticker(ticker)
         return jsonify(ticker_data)
     
     @app.route('/dummy_markets')
+    @cross_origin()
     def dummy_data():
         dummy_data = market_controller.get_dummy_data()
         return jsonify(dummy_data)
