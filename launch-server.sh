@@ -1,11 +1,13 @@
 #!/bin/bash
 
-# Activate the virtual environment
+# initializing for coding sessions
+
+# activate the virtual environment
 source server-env/Scripts/activate
 
-# Set environment variables
+# set environment variables
 export FLASK_APP=app.py
 export FLASK_ENV=development
 
-# Run the Flask app
+# run the Flask app
 flask --app app.py run --debug

@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 import random
 
 def get_change_data(ticker, start_date, end_date):
+    """fetches the data for the given ticker, calculates relevant changes """
     try:
         stock_data = yf.download(ticker, start=start_date, end=end_date)
         close_prices = stock_data['Close']

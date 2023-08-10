@@ -2,8 +2,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 
 def create_app():
-    app = Flask(__name__)
-    # app.config.from_object(config_class)
 
     app.config['CORS_HEADERS'] = 'Content-Type'
     
@@ -13,22 +11,17 @@ def create_app():
     # TODO this needs to get reorganized
     market_controller = MarketController()
     
-    @app.route('/markets2')
-    def market_data2():
-        market_data = market_controller.get_market_data()
-        return jsonify(market_data)
-
     @app.route('/markets')
     def market_data():
-        # Get the custom tickers from the request URL parameters
+        # get the custom tickers from the request URL parameters
         tickers = request.args.getlist('tickers')
 
-        # If tickers are not provided, use the default list
+        # if tickers are not provided, use the default list
         if not tickers:
             print('No tickers specified. Using default...')
             tickers = ['^GSPC', '^GSPTSE', 'GC=F', 'CL=F', 'BTC-USD']
 
-        # Instantiate the MarketController and get the market data
+        # instantiate the MarketController and get the market data
         market_controller = MarketController()
         market_data = market_controller.get_market_data(tickers)
 
@@ -37,7 +30,6 @@ def create_app():
     
     @app.route('/dummy_markets')
     def dummy_data():
-        # return "Let's go"
         dummy_data = market_controller.get_dummy_data()
         return jsonify(dummy_data)
 
