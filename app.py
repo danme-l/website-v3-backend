@@ -21,12 +21,16 @@ def create_app():
             print('No tickers specified. Using default...')
             tickers = ['^GSPC', '^GSPTSE', 'GC=F', 'CL=F', 'BTC-USD']
 
-        # instantiate the MarketController and get the market data
-        market_controller = MarketController()
+        # get the market data
         market_data = market_controller.get_market_data(tickers)
 
         return jsonify(market_data)
 
+            
+    @app.route('/markets/<ticker>')
+    def single_ticker_data(ticker):
+        ticker_data = market_controller.get_single_ticker(ticker)
+        return jsonify(ticker_data)
     
     @app.route('/dummy_markets')
     def dummy_data():

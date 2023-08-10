@@ -74,3 +74,22 @@ class MarketController:
         return dummy_market_data
 
 
+    def get_single_ticker(self, ticker):
+        try:
+            ticker_obj = yf.Ticker(ticker)
+            ticker_history = ticker_obj.history(period='1y')
+            if ticker_history.empty:
+                return {
+                    "error": "No historical data available for the specified ticker."
+                }
+
+            # Reset the index and extract 'Date' and 'Close' columns
+            ticker_history = ticker_history.reset_index()
+            ticker_data = ticker_history[['Date', 'Close']].to_dict(orient='records')
+            return ticker_data
+        except Exception as e:
+            print(f"Error: {e}")
+            return {
+                "error": "An error occurred while fetching historical data."
+            }
+
