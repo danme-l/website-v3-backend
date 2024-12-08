@@ -5,37 +5,41 @@ from datetime import datetime, timedelta
 import random
 
 def get_change_data(ticker, start_date, end_date):
-    """fetches the data for the given ticker, calculates relevant changes """
+    """fetches the data for the given ticker and calculates relevant changes."""
     try:
         stock_data = yf.download(ticker, start=start_date, end=end_date)
         close_prices = stock_data['Close']
+
+        if len(close_prices) < 2:
+            return {
+                "ticker": ticker,
+                "error": "Insufficient data available for the specified ticker or date range."
+            }
+
         current_price = close_prices.iloc[-1]
         daily_change = current_price - close_prices.iloc[-2]
-        weekly_change = current_price - close_prices.iloc[-7]
-        monthly_change = current_price - close_prices.iloc[-23]
-        three_month_change = current_price - close_prices.iloc[-67]
-        
-        # Check if the index -250 is out of bounds
+        weekly_change = current_price - close_prices.iloc[-7] if len(close_prices) >= 7 else None
+        monthly_change = current_price - close_prices.iloc[-23] if len(close_prices) >= 23 else None
+        three_month_change = current_price - close_prices.iloc[-67] if len(close_prices) >= 67 else None
+
         twelve_month_index = -250 if len(close_prices) >= 250 else -(len(close_prices) - 1)
         twelve_month_change = current_price - close_prices.iloc[twelve_month_index]
 
         return {
             "ticker": ticker,
-            "current_price": current_price,
-            "daily_change": daily_change,
-            "weekly_change": weekly_change,
-            "monthly_change": monthly_change,
-            "three_month_change": three_month_change,
-            "twelve_month_change": twelve_month_change
+            "current_price": float(current_price), 
+            "daily_change": float(daily_change),   
+            "weekly_change": float(weekly_change) if weekly_change is not None else None,
+            "monthly_change": float(monthly_change) if monthly_change is not None else None,
+            "three_month_change": float(three_month_change) if three_month_change is not None else None,
+            "twelve_month_change": float(twelve_month_change) if twelve_month_change is not None else None,
         }
-    
     except KeyError as e:
         print(f"Error: {e}")
         return {
             "ticker": ticker,
             "error": "Data not available for the specified ticker or date range."
         }
-    
     except Exception as e:
         print(f"Error: {e}")
         return {
