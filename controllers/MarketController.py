@@ -9,15 +9,15 @@ def get_change_data(ticker, start_date, end_date):
     try:
         stock_data = yf.download(ticker, start=start_date, end=end_date)
         close_prices = stock_data['Close']
-        current_price = close_prices[-1]
-        daily_change = current_price - close_prices[-2]
-        weekly_change = current_price - close_prices[-7]
-        monthly_change = current_price - close_prices[-23]
-        three_month_change = current_price - close_prices[-67]
+        current_price = close_prices.iloc[-1]
+        daily_change = current_price - close_prices.iloc[-2]
+        weekly_change = current_price - close_prices.iloc[-7]
+        monthly_change = current_price - close_prices.iloc[-23]
+        three_month_change = current_price - close_prices.iloc[-67]
         
         # Check if the index -250 is out of bounds
         twelve_month_index = -250 if len(close_prices) >= 250 else -(len(close_prices) - 1)
-        twelve_month_change = current_price - close_prices[twelve_month_index]
+        twelve_month_change = current_price - close_prices.iloc[twelve_month_index]
 
         return {
             "ticker": ticker,
@@ -28,12 +28,14 @@ def get_change_data(ticker, start_date, end_date):
             "three_month_change": three_month_change,
             "twelve_month_change": twelve_month_change
         }
+    
     except KeyError as e:
         print(f"Error: {e}")
         return {
             "ticker": ticker,
             "error": "Data not available for the specified ticker or date range."
         }
+    
     except Exception as e:
         print(f"Error: {e}")
         return {
@@ -54,25 +56,6 @@ class MarketController:
             market_data.append(data)
 
         return market_data
-    
-    def get_dummy_data(self, tickers = ['^GSPC', '^GSPTSE', 'GC=F', 'CL=F', 'BTC-USD']):
-        """dummy api function"""
-        dummy_market_data = []
-
-        for ticker in tickers:
-            data = {
-                "ticker": ticker,
-                "current_price": random.randint(8000, 25000),
-                "daily_change": random.randint(-10, 10),
-                "weekly_change": random.randint(-25, 25),
-                "monthly_change": random.randint(-40, 40),
-                "three_month_change": random.randint(-150, 150),
-                "twelve_month_change": random.randint(-300, 300)
-            }
-            dummy_market_data.append(data)
-        
-        return dummy_market_data
-
 
     def get_single_ticker(self, ticker):
         try:
@@ -93,3 +76,20 @@ class MarketController:
                 "error": "An error occurred while fetching historical data."
             }
 
+    def get_dummy_data(self, tickers = ['^GSPC', '^GSPTSE', 'GC=F', 'CL=F', 'BTC-USD']):
+        """dummy api function"""
+        dummy_market_data = []
+
+        for ticker in tickers:
+            data = {
+                "ticker": ticker,
+                "current_price": random.randint(8000, 25000),
+                "daily_change": random.randint(-10, 10),
+                "weekly_change": random.randint(-25, 25),
+                "monthly_change": random.randint(-40, 40),
+                "three_month_change": random.randint(-150, 150),
+                "twelve_month_change": random.randint(-300, 300)
+            }
+            dummy_market_data.append(data)
+        
+        return dummy_market_data
